@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+  <style>
+  .focus {color:#333;}
+  .error {color:red;}
+  .success {color:green;}
+  </style>
+</head>
+<body>
+<form>
+  <div id="msgBox"></div>
+  <br /><br />
+用户名 ： <input type="text" class="uname" /><br /><br />
+密码 ： <input type="password" class="upass" /><br /><br />
+确认密码 ： <input type="password" class="repass" /><br /><br />
+邮件：<input type="text" class="uemail" /><br />
+城市 ： <select type="text" class="ucity">
+  <option value='1'>请选择</option>
+  <option value="bj">北京</option>
+  <option value="sh">上海</option>
+<select><br /><br />
+<input type="submit" onclick="return fo.submit()" value="submit">
+</form>
+<body>
+<script type="text/javascript" src="validation.js"></script>
+<script>
+//注册role
+vaildFrom.regRole('email' , {
+   regx : '^[a-zA-Z0-9_]+@[a-zA-Z]+\\.[a-zA-Z]+$',
+   error : 'error',
+   success : 'success',
+   focus   : 'focus'
+})
+
+//注册自定义验证标签,如下面为非空验证
+vaildFrom.regCheckFn('require', function(obj, data){
+   var val = obj.getValue();
+   if(val == '') return false;
+   return true;
+})
+
+//扩展重复密码验证
+vaildFrom.regCheckFn('repass', function(obj, data){
+   var val = obj.getValue();
+   var otherVal = document.querySelector(data).value;
+
+   if(otherVal !== val || otherVal=='') return false;
+   return true;
+})
+
+var fo = new vaildFrom({
+           wrapSelector : '',
+           tipType : 'around',
+           //tipPosition : 'bottom',
+           msgEle : document.getElementById('msgBox'),
+           items:[{
+              selector : '.uname',
+              role : 'username',
+              noEmpty : true
+           },{
+              selector : '.upass',
+              role : 'password',
+              noEmpty : true
+           },
+           {
+              selector : '.repass',
+              role : 'password',
+              repass : '.upass',
+              error : 'not same!',
+              noEmpty : true
+           },
+           {
+              selector : '.uemail',
+              role : 'email',
+           },
+           {
+              selector : '.ucity',
+              regx : '^[^1]+$',
+              error : '请选择城市',
+
+           }
+           ]
+      })
+</script>
+<html>
